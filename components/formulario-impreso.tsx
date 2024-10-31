@@ -20,6 +20,13 @@ const europeanCountries = [
   "Reino Unido", "Ciudad del Vaticano"
 ];
 
+// Add proper typing for the country data
+interface CountryData {
+  name: {
+    common: string;
+  };
+}
+
 export default function Component() {
   const router = useRouter(); // Inicializa el router
   const [formData, setFormData] = useState({
@@ -65,13 +72,13 @@ export default function Component() {
 
   const handleCountryChange = async (countryCode: string) => {
     setSelectedCountry(countryCode);
-    // Store the full country name instead of the code
-    setFormData(prev => ({ ...prev, country: countryNames[countryCode] }));
+    // Explicitly type the array access
+    setFormData(prev => ({ ...prev, country: countryNames[countryCode as keyof typeof countryNames] }));
     
     try {
       const response = await axios.get(
         `https://secure.geonames.org/searchJSON?` + 
-        `country=${countryCode}` +  // Use country code for API
+        `country=${countryCode}` +
         `&featureClass=P` +
         `&maxRows=1000` +
         `&username=explorimentalist` +
@@ -288,9 +295,13 @@ export default function Component() {
                   <SelectValue placeholder="Selecciona un país" />
                 </SelectTrigger>
                 <SelectContent position="popper" className="max-h-[200px] overflow-y-auto">
-                  {countries.sort((a, b) => a.name.common.localeCompare(b.name.common)).map((country) => (
-                    <SelectItem key={country.cca2} value={country.cca2}>{country.name.common}</SelectItem>
-                  ))}
+                  {Object.entries(countryNames)
+                    .sort(([, a], [, b]) => a.localeCompare(b))
+                    .map(([code, name]) => (
+                      <SelectItem key={code} value={code}>
+                        {name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  basePath: process.env.NODE_ENV === 'production' ? '/calendar-app' : '',
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -14,8 +15,6 @@ const nextConfig = {
     }
     return config;
   },
-  basePath: '/your-repo-name',
-  assetPrefix: '/your-repo-name',
 };
 
 export default nextConfig;

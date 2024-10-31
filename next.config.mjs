@@ -14,6 +14,8 @@ const nextConfig = {
     }
     return config;
   },
+  basePath: '/your-repo-name',
+  assetPrefix: '/your-repo-name',
 };
 
 export default nextConfig;

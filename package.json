@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run clean && next dev",
-    "build": "npm run clean && next build",
+    "build": "npm run clean && next build && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next node_modules/.cache"

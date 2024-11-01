@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import axios from 'axios'
 import { resend } from '@/lib/resend'
-import { ConfirmationEmail } from '@/emails/confirmation'
+import { ConfirmationEmail } from '../../emails/confirmation'
 
 export async function POST(request: Request) {
   try {

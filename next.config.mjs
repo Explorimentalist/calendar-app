@@ -10,6 +10,7 @@ const nextConfig = {
     unoptimized: true,
   },
   basePath: process.env.NODE_ENV === 'production' ? '/calendar-app' : '',
+  distDir: 'out',
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
@@ -17,7 +18,7 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './app'),
     }
     return config
   },

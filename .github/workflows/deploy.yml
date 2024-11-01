@@ -11,35 +11,41 @@ permissions:
   id-token: write
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true  # Force Node 20 usage
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+  NODE_ENV: production
+  NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # Update to v4
+      - uses: actions/checkout@v4
         with:
           lfs: true
       
       - name: Setup Node
-        uses: actions/setup-node@v4  # Update to v4
+        uses: actions/setup-node@v4
         with:
-          node-version: 20  # Update to Node 20
+          node-version: 20
           cache: npm
           
       - name: Install dependencies
         run: |
-          npm ci
+          npm ci --legacy-peer-deps
           git lfs pull
         
       - name: Build project
-        run: npm run build
+        run: |
+          echo "Building with Node $(node -v) and NPM $(npm -v)"
+          npm run build
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
+          CI: true
           
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3  # Update to v3
+        if: success()
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
@@ -52,4 +58,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4  # Update to v4
+        uses: actions/deploy-pages@v4

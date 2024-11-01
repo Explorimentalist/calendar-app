@@ -15,6 +15,14 @@ const nextConfig = {
     }
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://secure.geonames.org/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

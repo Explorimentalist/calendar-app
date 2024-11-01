@@ -72,28 +72,31 @@ export default function Component() {
 
   const handleCountryChange = async (countryCode: string) => {
     setSelectedCountry(countryCode);
-    // Explicitly type the array access
     setFormData(prev => ({ ...prev, country: countryNames[countryCode as keyof typeof countryNames] }));
     
     try {
-      const response = await axios.get(
-        `https://secure.geonames.org/searchJSON?` + 
-        `country=${countryCode}` +
-        `&featureClass=P` +
-        `&maxRows=1000` +
-        `&username=explorimentalist` +
-        `&orderby=population` +
-        `&cities=cities15000`
-      );
+      const geonamesUrl = new URL('https://secure.geonames.org/searchJSON');
+      geonamesUrl.searchParams.append('country', countryCode);
+      geonamesUrl.searchParams.append('featureClass', 'P');
+      geonamesUrl.searchParams.append('maxRows', '1000');
+      geonamesUrl.searchParams.append('username', process.env.NEXT_PUBLIC_GEONAMES_USERNAME || 'explorimentalist');
+      geonamesUrl.searchParams.append('orderby', 'population');
+      geonamesUrl.searchParams.append('cities', 'cities15000');
+
+      const response = await axios.get(geonamesUrl.toString(), {
+        timeout: 5000, // 5 second timeout
+      });
       
-      if (response.data && response.data.geonames) {
+      if (response.data?.geonames) {
         setCities(response.data.geonames);
       } else {
         setCities([]);
+        console.warn('No cities data received from GeoNames');
       }
     } catch (error) {
       console.error('Error fetching cities:', error);
       setCities([]);
+      setError('Unable to fetch cities. Please try again later.');
     }
   };
 

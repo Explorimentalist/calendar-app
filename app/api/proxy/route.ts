@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server'
 import axios from 'axios'
-import { Resend } from 'resend'
-import ConfirmationEmail from '@/app/emails/confirmation'
-
-// Fix the Resend initialization - use proper env variable access
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { resend } from '@/lib/resend'
+import { ConfirmationEmail } from '@/emails/confirmation'
 
 export async function POST(request: Request) {
   try {

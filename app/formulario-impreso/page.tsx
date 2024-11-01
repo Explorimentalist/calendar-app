@@ -1,4 +1,4 @@
-import Component from '@/components/formulario-impreso'
+import Component from '../components/formulario-impreso'
 
 export default function FormularioImpresoPage() {
   return (

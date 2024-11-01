@@ -1,4 +1,4 @@
-import { NdoweyeCalendar } from "@/components/ndoweye-calendar"
+import { NdoweyeCalendar } from "./components/ndoweye-calendar"
 
 export default function Page() {
   return (

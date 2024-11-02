@@ -1,8 +1,8 @@
-name: Deploy Next.js site to Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -10,45 +10,52 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+  NODE_ENV: production
+  NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
       
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: 20
+          cache: npm
+          
       - name: Install dependencies
         run: |
-          npm install
+          npm ci --legacy-peer-deps
           npm install --save-dev typescript @types/node @types/react @types/react-dom
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+          git lfs pull
         
-      - name: Build with Next.js
-        run: npm run build
-        
+      - name: Build project
+        run: |
+          echo "Building with Node $(node -v) and NPM $(npm -v)"
+          npm run build
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
+          CI: true
+          
       - name: Upload artifact
+        if: success()
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

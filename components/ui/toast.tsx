@@ -94,6 +94,9 @@ const ToastDescription = React.forwardRef<
 ))
 ToastDescription.displayName = ToastPrimitives.Description.displayName
 
+export interface ToastProps extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root>,
+  VariantProps<typeof toastVariants> {}
+
 export {
   ToastProvider,
   ToastViewport,

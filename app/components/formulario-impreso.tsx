@@ -27,6 +27,13 @@ interface CountryData {
   };
 }
 
+// Add interface for city data at the top of the file
+interface City {
+  geonameId: number;
+  name: string;
+  // Add other properties if needed
+}
+
 export default function Component() {
   const router = useRouter(); // Inicializa el router
   const [formData, setFormData] = useState({
@@ -44,7 +51,7 @@ export default function Component() {
   const [error, setError] = useState<string | null>(null)
   const [emailError, setEmailError] = useState<string | null>(null)
   const [countries, setCountries] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [showToast, setShowToast] = useState(false)
@@ -88,7 +95,7 @@ export default function Component() {
       });
       
       if (response.data?.geonames) {
-        setCities(response.data.geonames);
+        setCities(response.data.geonames as City[]);
       } else {
         setCities([]);
         console.warn('No cities data received from GeoNames');
@@ -142,7 +149,16 @@ export default function Component() {
     }
 
     try {
-      const response = await axios.post('/api/proxy', formData)
+      const response = await axios.post(
+        'https://script.google.com/macros/s/AKfycbxwNLN9aKg2NhbfHarS6Ov_8yp8sjYCJ42KeIgPbmOSYJMdWCDIhgFPaaOc8CeTzhF6MA/exec',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      
       if (response.data.result === 'success') {
         setToastMessage({
           title: '¡Éxito!',
@@ -170,13 +186,13 @@ export default function Component() {
         throw new Error('Hubo un error al enviar el formulario.')
       }
     } catch (error) {
+      console.error('Error:', error)
       setToastMessage({
         title: 'Error',
         description: 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo.',
         variant: 'destructive'
       })
       setShowToast(true)
-      console.error('Error:', error)
     } finally {
       setIsLoading(false)
     }

@@ -113,7 +113,7 @@ export function NdoweyeCalendar() {
 
     weekdays.forEach((day, index) => {
       cells.push(
-        <div key={`header-${index}`} className="text-sm font-medium text-gray-500 mb-4 text-center">
+        <div key={`header-${index}`} className="text-sm font-medium text-gray-500 mb-4 text-center font-lexend-deca">
           {day}
         </div>
       )
@@ -132,7 +132,7 @@ export function NdoweyeCalendar() {
       cells.push(
         <div
           key={day}
-          className={`flex items-center justify-center h-12 text-lg font-medium ${
+          className={`flex items-center justify-center h-12 text-lg font-medium font-lexend-deca ${
             isCurrentDay
               ? 'bg-orange-500 text-white rounded-full'
               : 'text-gray-900 hover:bg-gray-100 rounded-full transition-colors'
@@ -173,7 +173,7 @@ export function NdoweyeCalendar() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
-              className="text-center"
+              className="text-center font-lexend-deca"
             >
               <h3 className="text-xl font-semibold text-gray-600 mb-1">
                 {displayDate.getFullYear()}
@@ -208,13 +208,13 @@ export function NdoweyeCalendar() {
           href="https://explorimentalist.gumroad.com/l/mwvsp?_gl=1*xchebq*_ga*MTgwNzkxNzMwNy4xNjk2ODY0OTM5*_ga_6LJN6D94N6*MTcyNjI1NDI0My4yMC4xLjE3MjYyNTQ2MzguMC4wLjA."
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full border-2  border-gray-600 text-gray-600 px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:border-black hover:text-black hover:shadow-lg"
+          className="block w-full border-2 border-gray-600 text-gray-600 px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:border-black hover:text-black hover:shadow-lg font-lexend-deca"
         >
           Comprar versión para imprimir 2024
         </a>
         <Link 
           href="/formulario-impreso" 
-          className="block w-full bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:bg-black hover:shadow-lg"
+          className="block w-full bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:bg-black hover:shadow-lg font-lexend-deca"
         >
           Solicitar versión impresa 2025
         </Link>

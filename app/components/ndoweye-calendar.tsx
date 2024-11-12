@@ -15,11 +15,37 @@ const weekdays = [
   "Bongôndé", "Botyêyi", "Bovènga", "Bongàmbi", "Bolômbé", "Boràmbbé", "Bopànya"
 ]
 
+// Add animation variants
+const buttonVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 20,
+      stiffness: 100
+    }
+  }
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      delayChildren: 0.2,
+    }
+  }
+}
+
 export function NdoweyeCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [displayDate, setDisplayDate] = useState(new Date())
   const [isNarrowScreen, setIsNarrowScreen] = useState(false)
   const scrollViewRef = useRef<HTMLDivElement>(null)
+  const [goingForward, setGoingForward] = useState(true)
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentDate(new Date()), 1000 * 60) // Update every minute
@@ -57,11 +83,13 @@ export function NdoweyeCalendar() {
   }
 
   const goToPreviousMonth = () => {
-    setDisplayDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1))
+    setGoingForward(false);
+    setDisplayDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1));
   }
 
   const goToNextMonth = () => {
-    setDisplayDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1))
+    setGoingForward(true);
+    setDisplayDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1));
   }
 
   const renderCalendar = () => {
@@ -126,6 +154,8 @@ export function NdoweyeCalendar() {
     }
 
     days.forEach((day, index) => {
+      const date = new Date(year, month, day)
+      const isWeekend = date.getDay() === 6 || date.getDay() === 0 // 6 is Saturday, 0 is Sunday
       const isCurrentDay = day === currentDate.getDate() &&
                            month === currentDate.getMonth() &&
                            year === currentDate.getFullYear()
@@ -136,7 +166,7 @@ export function NdoweyeCalendar() {
             isCurrentDay
               ? 'bg-orange-500 text-white rounded-full'
               : 'text-gray-900 hover:bg-gray-100 rounded-full transition-colors'
-          }`}
+          } ${isWeekend ? 'text-gray-400' : ''}`}
         >
           {day}
         </div>
@@ -156,10 +186,14 @@ export function NdoweyeCalendar() {
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <div className={`w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg ${
-        isNarrowScreen ? 'flex flex-col h-screen' : 'p-8'
-      }`}>
+    <div className="flex flex-col items-center w-full">
+      <motion.div 
+        layout
+        transition={{ duration: 0.15, layout: { duration: 0.15 } }}
+        className={`w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden ${
+          isNarrowScreen ? 'flex flex-col h-[80vh]' : 'px-20 py-14'
+        }`}
+      >
         <div className={`flex items-end justify-between mb-8 ${
           isNarrowScreen ? 'p-4 bg-white sticky top-0 z-10' : ''
         }`}>
@@ -169,9 +203,9 @@ export function NdoweyeCalendar() {
           <AnimatePresence mode="wait">
             <motion.div
               key={displayDate.getMonth()}
-              initial={{ opacity: 0, x: 10 }}
+              initial={{ opacity: 0, x: goingForward ? 10 : -10 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
+              exit={{ opacity: 0, x: goingForward ? -10 : 10 }}
               transition={{ duration: 0.2 }}
               className="text-center font-lexend-deca"
             >
@@ -187,38 +221,50 @@ export function NdoweyeCalendar() {
             <ChevronRight className="h-8 w-8" />
           </Button>
         </div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            ref={scrollViewRef}
-            key={displayDate.getMonth()}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.3 }}
-            className={`space-y-4 ${isNarrowScreen ? 'overflow-y-auto flex-grow' : ''}`}
-          >
-            {renderCalendar()}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+        <motion.div
+          ref={scrollViewRef}
+          key={displayDate.getMonth()}
+          initial={{ opacity: 0, x: goingForward ? 10 : -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: goingForward ? -10 : 10 }}
+          transition={{ 
+            duration: 0.3,
+            ease: "easeInOut",
+            layout: { duration: 0.3 }
+          }}
+          layout="position"
+          className="space-y-4"
+        >
+          {renderCalendar()}
+        </motion.div>
+      </motion.div>
       
-      {/* Botones debajo del calendario */}
-      <div className="mt-8 space-y-4">
-        <a 
-          href="https://explorimentalist.gumroad.com/l/mwvsp?_gl=1*xchebq*_ga*MTgwNzkxNzMwNy4xNjk2ODY0OTM5*_ga_6LJN6D94N6*MTcyNjI1NDI0My4yMC4xLjE3MjYyNTQ2MzguMC4wLjA."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full border-2 border-gray-600 text-gray-600 px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:border-black hover:text-black hover:shadow-lg font-lexend-deca"
-        >
-          Comprar versión para imprimir 2024
-        </a>
-        <Link 
-          href="/formulario-impreso" 
-          className="block w-full bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:bg-black hover:shadow-lg font-lexend-deca"
-        >
-          Solicitar versión impresa 2025
-        </Link>
-      </div>
+      {/* Buttons below calendar */}
+      <motion.div 
+        className={`mt-8 space-y-6 w-full max-w-[680px] ${isNarrowScreen ? 'px-4' : ''}`}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={buttonVariants}>
+          <a 
+            href="https://explorimentalist.gumroad.com/l/mwvsp?_gl=1*xchebq*_ga*MTgwNzkxNzMwNy4xNjk2ODY0OTM5*_ga_6LJN6D94N6*MTcyNjI1NDI0My4yMC4xLjE3MjYyNTQ2MzguMC4wLjA."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full border-2 border-gray-600 text-gray-600 px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:border-black hover:text-black hover:shadow-lg font-lexend-deca"
+          >
+            Comprar versión para imprimir 2024
+          </a>
+        </motion.div>
+        <motion.div variants={buttonVariants}>
+          <Link 
+            href="/formulario-impreso" 
+            className="block w-full bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:bg-black hover:shadow-lg font-lexend-deca"
+          >
+            Solicitar versión impresa 2025
+          </Link>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

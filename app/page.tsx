@@ -1,4 +1,31 @@
+"use client"
+
 import { NdoweyeCalendar } from "./components/ndoweye-calendar"
+import { motion } from "framer-motion"
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3, // Delay between each child animation
+      delayChildren: 0.2,   // Initial delay before starting animations
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 20,
+      stiffness: 100
+    }
+  }
+}
 
 export default function Page() {
   return (
@@ -13,12 +40,12 @@ export default function Page() {
                 background: `
                   linear-gradient(
                     45deg,
-                    rgba(97, 183, 237, 0.5) -10%,   /* Light blue */
-                    rgba(155, 89, 182, 0.3) 20%,    /* Purple */
-                    rgba(231, 76, 60, 0.3) 40%,     /* Red */
-                    rgba(241, 196, 15, 0.3) 60%,    /* Yellow */
-                    rgba(46, 204, 113, 0.3) 80%,    /* Green */
-                    rgba(52, 152, 219, 0.5) 110%    /* Blue */
+                    rgba(97, 183, 237, 0.5) -10%,
+                    rgba(155, 89, 182, 0.3) 20%,
+                    rgba(231, 76, 60, 0.3) 40%,
+                    rgba(241, 196, 15, 0.3) 60%,
+                    rgba(46, 204, 113, 0.3) 80%,
+                    rgba(52, 152, 219, 0.5) 110%
                   )
                 `
               }}
@@ -28,14 +55,25 @@ export default function Page() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 custom:px-[5%] flex flex-col min-h-screen">
-        <div className="flex-grow flex items-center justify-center">
+      <motion.div 
+        className="relative z-10 custom:px-[5%] flex flex-col min-h-screen"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div 
+          className="flex-grow flex items-center justify-center w-full"
+          variants={itemVariants}
+        >
           <NdoweyeCalendar />
-        </div>
-        <footer className="text-center py-4 text-sm text-gray-600">
+        </motion.div>
+        <motion.footer 
+          className="text-center py-4 text-sm text-gray-600"
+          variants={itemVariants}
+        >
           Elanjiminyya © 2024. Designed by the Explorimentalist.
-        </footer>
-      </div>
+        </motion.footer>
+      </motion.div>
     </div>
   )
 }

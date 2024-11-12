@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "npm run clean && next dev",
-    "build": "npm run clean && npm run setup && next build && touch out/.nojekyll",
+    "build": "npm run clean && next build && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next out node_modules/.cache",
-    "setup": "tsc --init || true"
+    "postinstall": "npx --no -- tsc --init || true"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.0",

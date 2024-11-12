@@ -38,11 +38,6 @@ jobs:
           npm install --save next@14.2.17
           git lfs pull
         
-      - name: Setup TypeScript
-        run: |
-          npx tsc --init
-          npm run lint || true
-        
       - name: Build project
         run: |
           echo "Building with Node $(node -v) and NPM $(npm -v)"

@@ -31,26 +31,27 @@ jobs:
           
       - name: Install dependencies
         run: |
-          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          rm -rf node_modules package-lock.json .next
           npm install
           npm install --save-dev typescript@5.6.3 @types/node@20.17.5 @types/react@18.3.12 @types/react-dom@18.3.1
           npm install --save next@14.2.17
           git lfs pull
         
-      - name: Create tsconfig.json if not exists
+      - name: Setup TypeScript
         run: |
-          if [ ! -f tsconfig.json ]; then
-            npx tsc --init --jsx preserve --target es5 --module esnext --moduleResolution bundler --esModuleInterop --resolveJsonModule --lib dom,dom.iterable,esnext --allowJs true --skipLibCheck true --strict true --noEmit true --incremental true
-          fi
+          npx tsc --init
+          npm run lint || true
         
       - name: Build project
         run: |
           echo "Building with Node $(node -v) and NPM $(npm -v)"
-          npm run build
+          NODE_OPTIONS="--max_old_space_size=4096" npm run build
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
           CI: true
+          NEXT_TELEMETRY_DISABLED: 1
           
       - name: Upload artifact
         if: success()

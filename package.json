@@ -7,7 +7,7 @@
     "build": "npm run clean && next build && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf .next node_modules/.cache"
+    "clean": "rm -rf .next out node_modules/.cache"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.0",

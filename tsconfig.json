@@ -22,16 +22,20 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./app/*"
+      ],
+      "@/lib/*": [
+        "./app/lib/*"
       ]
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
     ".next/types/**/*.ts",
     "out/types/**/*.ts"
   ],

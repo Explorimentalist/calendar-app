@@ -35,9 +35,6 @@ jobs:
           npm ci
           npm install -g typescript@5.6.3
           npm install --save-dev typescript@5.6.3 @types/node@20.17.6
-        env:
-          NODE_ENV: production
-          NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
       
       # Verify installations before any cleaning
       - name: Verify dependencies
@@ -45,21 +42,18 @@ jobs:
           echo "Node version: $(node --version)"
           echo "NPM version: $(npm --version)"
           echo "TypeScript version: $(npx tsc --version)"
-          echo "Next.js version: $(npm list next)"
-      
+
       # Now handle the build process
       - name: Build
         run: |
           # Clean only .next and out directories
           rm -rf .next out
           
-          # Build the project
+          # Build using npm script
           NODE_ENV=production npm run build
         env:
-          NODE_ENV: production
           NEXT_PUBLIC_GEONAMES_USERNAME: explorimentalist
           CI: true
-          NEXT_PUBLIC_BASE_PATH: /calendar-app
           
       - name: Upload artifact
         if: success()

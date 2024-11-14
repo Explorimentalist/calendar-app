@@ -1,18 +1,23 @@
 const axios = require('axios');
 
 exports.handler = async function(event, context) {
-  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
       body: JSON.stringify({ error: 'Method Not Allowed' }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      }
     };
   }
 
   try {
+    console.log('Received form data:', event.body);
     const formData = JSON.parse(event.body);
     
-    // Forward the request to Google Apps Script
     const response = await axios.post(
       'https://script.google.com/macros/s/AKfycbyMnKOzrWzzGP4adX41beu3Z8JdOSe037XBLQDUWw18GvoC39iNC3jHazLgvmoLPMKfRQ/exec',
       formData,
@@ -20,32 +25,35 @@ exports.handler = async function(event, context) {
         headers: {
           'Content-Type': 'application/json',
           'Origin': 'https://luminous-mooncake-4988fd.netlify.app'
-        },
+        }
       }
     );
 
-    // Check if the response contains an error
-    if (response.data.result === 'error') {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          result: 'error',
-          message: response.data.error || 'Error al procesar la solicitud'
-        })
-      };
-    }
+    console.log('Google Apps Script response:', response.data);
 
     return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
       body: JSON.stringify(response.data)
     };
   } catch (error) {
-    console.error('Error:', error.response?.data || error.message);
+    console.error('Error details:', error.response?.data || error.message);
+    
     return {
       statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      },
       body: JSON.stringify({ 
-        result: 'error',
-        message: 'Error al enviar el formulario',
+        error: 'Error al procesar la solicitud',
         details: error.response?.data || error.message
       })
     };

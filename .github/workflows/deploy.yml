@@ -42,8 +42,6 @@ jobs:
           echo "Node version: $(node --version)"
           echo "NPM version: $(npm --version)"
           echo "TypeScript version: $(npx tsc --version)"
-          npm list typescript
-          npm list @types/node
       
       # Now handle the build process
       - name: Build

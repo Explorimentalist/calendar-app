@@ -150,7 +150,7 @@ export default function Component() {
 
     try {
       const response = await axios.post(
-        'https://script.google.com/macros/s/AKfycbxwNLN9aKg2NhbfHarS6Ov_8yp8sjYCJ42KeIgPbmOSYJMdWCDIhgFPaaOc8CeTzhF6MA/exec',
+        'https://script.google.com/macros/s/AKfycbyMnKOzrWzzGP4adX41beu3Z8JdOSe037XBLQDUWw18GvoC39iNC3jHazLgvmoLPMKfRQ/exec',
         formData,
         {
           headers: {

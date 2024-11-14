@@ -157,44 +157,43 @@ export default function Component() {
             'Content-Type': 'application/json',
           },
         }
-      )
-      
+      );
+
       if (response.data.result === 'success') {
         setToastMessage({
           title: '¡Éxito!',
           description: 'Formulario enviado correctamente. Serás redirigido en unos segundos.',
           variant: 'success'
-        })
-        setShowToast(true)
-        // Reset form but don't navigate yet
+        });
+        setShowToast(true);
+        // Reset form
         setFormData({
           name: '',
           surname: '',
           email: '',
-          address: '',
-          postcode: '',
           country: '',
           city: '',
-          quantity: '',
-          language: ''
-        })
-        // Enable navigation after 10 seconds
+          postcode: '',
+          address: '',
+          language: '',
+          quantity: ''
+        });
         setTimeout(() => {
-          setCanNavigate(true)
-        }, 10000)
+          router.push('/gracias');
+        }, 2000);
       } else {
-        throw new Error('Hubo un error al enviar el formulario.')
+        throw new Error(response.data.message || 'Error al procesar el formulario');
       }
-    } catch (error) {
-      console.error('Error:', error)
+    } catch (error: any) {
+      console.error('Form submission error:', error);
       setToastMessage({
         title: 'Error',
-        description: 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo.',
+        description: error.response?.data?.message || error.message || 'Hubo un error al enviar el formulario',
         variant: 'destructive'
-      })
-      setShowToast(true)
+      });
+      setShowToast(true);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 

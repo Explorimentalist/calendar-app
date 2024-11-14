@@ -149,7 +149,6 @@ export default function Component() {
     }
 
     try {
-      setIsLoading(true)
       const response = await axios.post(
         '/.netlify/functions/submit-form',
         formData,
@@ -159,20 +158,44 @@ export default function Component() {
           },
         }
       )
-
+      
       if (response.data.result === 'success') {
-        router.push('/success')
+        setToastMessage({
+          title: '¡Éxito!',
+          description: 'Formulario enviado correctamente. Serás redirigido en unos segundos.',
+          variant: 'success'
+        })
+        setShowToast(true)
+        setFormData({
+          name: '',
+          surname: '',
+          email: '',
+          address: '',
+          postcode: '',
+          country: '',
+          city: '',
+          quantity: '',
+          language: ''
+        })
+        setTimeout(() => {
+          setCanNavigate(true)
+        }, 10000)
       } else {
-        setError('Hubo un error al procesar el formulario: ' + (response.data.message || 'Error desconocido'))
+        setToastMessage({
+          title: 'Error',
+          description: response.data.error || 'Hubo un error al enviar el formulario.',
+          variant: 'error'
+        })
+        setShowToast(true)
       }
     } catch (error: any) {
-      console.error('Form submission error:', error.response?.data || error.message)
-      setError(
-        error.response?.data?.error || 
-        error.response?.data?.details || 
-        error.message || 
-        'Hubo un error al enviar el formulario'
-      )
+      console.error('Error:', error)
+      setToastMessage({
+        title: 'Error',
+        description: error.response?.data?.error || error.message || 'Hubo un error al enviar el formulario.',
+        variant: 'error'
+      })
+      setShowToast(true)
     } finally {
       setIsLoading(false)
     }

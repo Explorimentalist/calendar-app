@@ -45,10 +45,13 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
+          npm install -g typescript@5.6.3
           npm install --save-dev typescript@5.6.3 @types/node@20.17.6
 
       - name: Verify TypeScript
-        run: npx tsc --version
+        run: |
+          which tsc
+          tsc --version
 
       - name: Build project
         run: |

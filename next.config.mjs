@@ -10,7 +10,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/calendar-app' : '',
+  basePath: '', // Remove or adjust this if not needed
   distDir: 'out',
   reactStrictMode: true,
   typescript: {
@@ -20,22 +20,9 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, './app'),
-    }
-
-    if (!isServer) {
-      config.cache = {
-        type: 'filesystem',
-        buildDependencies: {
-          config: [fileURLToPath(import.meta.url)],
-        },
-        cacheDirectory: path.resolve(__dirname, '.next/cache/webpack'),
-        name: dev ? 'development' : 'production',
-        version: '1.0.0'
-      }
-    }
-
-    return config
+    };
+    return config;
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

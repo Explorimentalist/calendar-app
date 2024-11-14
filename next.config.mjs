@@ -14,7 +14,7 @@ const nextConfig = {
   distDir: 'out',
   reactStrictMode: true,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   webpack: (config, { dev, isServer }) => {
     config.resolve.alias = {

@@ -253,16 +253,16 @@ export function NdoweyeCalendar() {
             rel="noopener noreferrer"
             className="block w-full border-2 border-gray-600 text-gray-600 px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:border-black hover:text-black hover:shadow-lg font-lexend-deca"
           >
-            Comprar versión para imprimir 2024
+            Comprar versión para imprimir 2025
           </a>
         </motion.div>
         <motion.div variants={buttonVariants}>
-          <Link 
+          {/* <Link 
             href="/formulario-impreso" 
             className="block w-full bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out hover:bg-black hover:shadow-lg font-lexend-deca"
           >
             Solicitar versión impresa 2025
-          </Link>
+          </Link> */}
         </motion.div>
       </motion.div>
     </div>
